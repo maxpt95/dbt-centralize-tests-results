@@ -1,0 +1,56 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'centralize-tests'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'bigquery'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+    
+
+models:
+  +persist_docs:
+    relation: true
+    columns: true
+  centralize-tests:
+    +dbt-osmosis: "model.yml"
+
+tests:
+  centralize-tests:
+    #Enable test failure storage
+    +store_failures: true
+    +schema: tests
+
+# Centralize test after every dbt run
+on-run-end:
+  - "{{ centralize_test_results(results, tests) }}"  
+
+
+
+# this is very important: the framework cannot modify the dispatch order of the main project (this one)
+# We need to change it because we override a central macro, get_merge_sql (among a couple others)
+# To be able to ensure that even dbt original macros use our new version (and for the framework to work)
+# we need these lines. They essentially tell dbt that whenever a macro is dispatched from package dbt, first look in our package
+# and use any overrides found there.
+
+dispatch:
+  - macro_namespace: dbt
+    search_order: 
+      - dbt

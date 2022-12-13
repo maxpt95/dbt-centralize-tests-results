@@ -9,15 +9,7 @@ The project contains only the needed macro and configuration (check dbt_project.
 for executing the centralization. 
 
 ## DBT_PROJECT.YML
-The relevant configurations inside this file are:
-
-
-```
-tests:
-  centralize-tests:
-    +store_failures: true
-    +schema: tests
-```
+The relevant configuration inside this file is:
 
 ```
 on-run-end:
@@ -25,5 +17,5 @@ on-run-end:
   
 ```
 
-This will ensure that after each `dbt test` and `dbt run` the centralize_test_results
+THis will ensure that after each `dbt test` and `dbt run` the centralize_test_results
 macro will be executed.
