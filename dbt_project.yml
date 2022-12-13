@@ -40,7 +40,7 @@ tests:
 
 # Centralize test after every dbt run
 on-run-end:
-  - "{{ centralize_test_results(results, tests) }}"  
+  - "{{ centralize_test_results(results, 'tests') }}"  
 
 
 

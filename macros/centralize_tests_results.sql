@@ -10,7 +10,7 @@
     {%- endif -%}
   {%- endfor -%}
   
-  {%- set central_tbl -%} {{ target.schema }}_tests.test_central {%- endset -%}
+  {%- set central_tbl -%} {{ target.schema }}_{{dataset}}.test_central {%- endset -%}
   
   {{ log("Centralizing test failures in " + central_tbl, info = true) if execute }}
 
